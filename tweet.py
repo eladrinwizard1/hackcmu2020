@@ -63,5 +63,9 @@ if __name__ == "__main__":
         t.tweet(tool.correct(sentence))
         time.sleep(5)
 
-    while input("Continue? y/n: ") != "n":
+    while True:
         generate()
+        time.sleep(60)
+
+    # while input("Continue? y/n: ") != "n":
+    #     generate()

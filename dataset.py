@@ -119,14 +119,15 @@ class VisualNovelDataset(Dataset):
         vndescs = [self._remove_brackets(desc) for desc in vndescs]
         return [desc + "\n" for desc in vndescs]
 
+
 DATASETS = {
-    "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
-    "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
-    "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
-    "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
-    "bible": BibleDataset("data/bible/bible.txt"),
-    "worm": WormDataset("data/worm/worm.txt"),
-    "movies": MovieDataset("data/movies/moviequotes.memorable_quotes.txt"),
+    # "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
+    # "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
+    # "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
+    # "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
+    # "bible": BibleDataset("data/bible/bible.txt"),
+    # "worm": WormDataset("data/worm/worm.txt"),
+    # "movies": MovieDataset("data/movies/moviequotes.memorable_quotes.txt"),
     "vn": VisualNovelDataset("data/visualnovels/vn")
 }
 

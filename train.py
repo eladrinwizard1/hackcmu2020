@@ -8,15 +8,7 @@ from dataset import DATASETS
 
 
 def make_data():
-    data = []
-    data += DATASETS["reviews"].sample(0)
-    data += DATASETS["shakespeare"].sample(0)
-    data += DATASETS["stackoverflow"].sample(0)
-    data += DATASETS["toptweets"].sample(0)
-    data += DATASETS["bible"].sample(0)
-    data += DATASETS["worm"].sample(0)
-    data += DATASETS["movies"].sample(0)
-    data += DATASETS["vn"].sample(15000)
+    data = DATASETS["vn"].sample(15000)
     shuffle(data)
     return data
 
@@ -28,12 +20,6 @@ if __name__ == "__main__":
     text_model = markovify.NewlineText("\n".join(lines), state_size=4)
     with open("model.json", "w+") as f:
         json.dump(text_model.to_json(), f)
-
-    seeds = [
-    ]
-
-    for s in seeds:
-        print(text_model.make_sentence_with_start(s))
 
     count = 0
     tool = language_tool_python.LanguageTool('en-US')
