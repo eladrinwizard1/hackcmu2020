@@ -16,7 +16,7 @@ def make_data():
     data += DATASETS["bible"].sample(0)
     data += DATASETS["worm"].sample(0)
     data += DATASETS["movies"].sample(0)
-    data += DATASETS["vn"].sample(20000)
+    data += DATASETS["vn"].sample(15000)
     shuffle(data)
     return data
 

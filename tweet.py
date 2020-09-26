@@ -1,6 +1,6 @@
 # Twitter Bot Source:
 # https://towardsdatascience.com/how-i-built-a-twitter-bot-using-python-and-selenium-c036bfff6af8
-
+import language_tool_python
 import markovify
 import time
 from selenium import webdriver
@@ -18,7 +18,7 @@ class TwitterBot:
 
     def sign_in(self):
         self.browser.get("https://www.twitter.com/login")
-        time.sleep(5)
+        time.sleep(3)
 
         username_input = self.browser.find_element_by_name(
             "session[username_or_email]")
@@ -26,7 +26,7 @@ class TwitterBot:
         username_input.send_keys(self.username)
         password_input.send_keys(self.password)
         password_input.send_keys(Keys.ENTER)
-        time.sleep(5)
+        time.sleep(3)
 
     def tweet(self, text):
         if len(text) < 280:
@@ -50,4 +50,18 @@ if __name__ == "__main__":
     un = credentials["username"]
     p = credentials["password"]
     t = TwitterBot(un, p)
-    t.tweet("test")
+
+    with open("model.json", "r") as f:
+        text_model = markovify.NewlineText.from_json(json.load(f))
+
+    tool = language_tool_python.LanguageTool('en-US')
+
+    def generate():
+        sentence = None
+        while sentence is None or len(tool.check(sentence)) > 5:
+            sentence = text_model.make_short_sentence(280, 140)
+        t.tweet(tool.correct(sentence))
+        time.sleep(5)
+
+    while input("Continue? y/n: ") != "n":
+        generate()

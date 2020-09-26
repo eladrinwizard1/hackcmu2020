@@ -31,10 +31,17 @@ class Dataset:
         line = " ".join(filter(lambda x: "//" not in x, line.split()))
         return f"{line}\n" if len(line) > Dataset.min_line_length else None
 
+    @staticmethod
+    def censor(text):
+        for word in BANNED_WORDS:
+            if word in text:
+                return False
+        return True
+
     def process(self):
         with open(f"{self.dir}/raw_lines.txt", "w+", encoding="utf-8") as f:
-            f.writelines(filter(lambda x: x is not None,
-                                map(Dataset.clean_line, self.list)))
+            f.writelines(filter(self.censor, filter(lambda x: x is not None,
+                                map(Dataset.clean_line, self.list))))
 
     def sample(self, n):
         with open(f"{self.dir}/raw_lines.txt", encoding="utf-8") as f:
@@ -104,20 +111,12 @@ class VisualNovelDataset(Dataset):
                 count -= 1
         return "".join(out)
 
-    @staticmethod
-    def _censor(text):
-        for word in BANNED_WORDS:
-            if word in text:
-                return False
-        return True
-
     def get_lines(self):
         vninfo = pd.read_csv(self.path, sep='\t', header=None)
         vndescs = vninfo[6]
         vndescs = [desc.replace("\\n", " ")
                    for desc in vndescs if type(desc) is not float]
         vndescs = [self._remove_brackets(desc) for desc in vndescs]
-        vndescs = [desc for desc in vndescs if self._censor(desc)]
         return [desc + "\n" for desc in vndescs]
 
 DATASETS = {
