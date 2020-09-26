@@ -19,9 +19,15 @@ Automatically tweet generated descriptions.
 
 # Datasets for experimentation
 bible: https://www.gutenberg.org/cache/epub/10/pg10.txt
+
 movies: https://www.cs.cornell.edu/~cristian/memorability.html
+
 reviews: https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
+
 shakespeare: https://www.kaggle.com/kingburrito666/shakespeare-plays
+
 stackoverflow: https://www.kaggle.com/stackoverflow/stacksample
+
 top20tweets: https://dataverse.harvard.edu/dataset.xhtml?id=3047332
+
 vndb: https://dl.vndb.org/dump/
