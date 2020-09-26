@@ -71,23 +71,21 @@ class BibleDataset(Dataset):
             return f.readlines()
 
 
+class WormDataset(Dataset):
+    def get_lines(self):
+        with open(self.path, "r", encoding="utf-8") as f:
+            return f.readlines()
+
+
 DATASETS = {
     "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
     "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
     "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
     "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
-    "bible": BibleDataset("data/bible/bible.txt")
+    "bible": BibleDataset("data/bible/bible.txt"),
+    "worm": WormDataset("data/worm/worm.txt")
 }
 
 
 if __name__ == "__main__":
-    print("Starting Reviews")
-    ReviewDataset("data/reviews/IMDB Dataset.csv").process()
-    print("Starting Shakespeare")
-    ShakespeareDataset("data/shakespeare/Shakespeare_data.csv").process()
-    print("Starting StackOverflow")
-    StackOverflowDataset("data/stackoverflow/Answers.csv").process()
-    print("Starting TopTweets")
-    TopTweetsDataset("data/top20tweets/tweets.csv").process()
-    print("Starting Bible")
-    BibleDataset("data/bible/bible.txt").process()
+    pass
