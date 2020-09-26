@@ -82,17 +82,40 @@ class MovieDataset(Dataset):
         with open(self.path, "r", encoding="windows-1252") as f:
             return [line for i, line in enumerate(f.readlines()) if i % 4 == 2]
 
+class VisualNovelDataset(Dataset):
+    def _remove_brackets(self, text):
+        count = 0
+        out = []
+        for c in text:
+            if c == "[":
+                count += 1
+            if count == 0:
+                out.append(c)
+            if c == "]":
+                count -= 1
+        return "".join(out)
+
+    def get_lines(self):
+        vninfo = pd.read_csv(self.path, sep='\t', header=None)
+        vntitles = vninfo[1]
+        vndescs = vninfo[6]
+        vnzipped = zip(vntitles, vndescs)
+        # re.sub("\\n", " ", desc)
+        vnzipped = [(title, desc.replace("\\n", " ")) for title, desc in vnzipped if type(desc) is not float]
+        vnzipped = [(title, self._remove_brackets(desc)) for title, desc in vnzipped]
+        return [title + " (thisisasep) " + desc + "\n" for title, desc in vnzipped]
 
 DATASETS = {
-    "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
-    "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
-    "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
-    "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
-    "bible": BibleDataset("data/bible/bible.txt"),
-    "worm": WormDataset("data/worm/worm.txt"),
-    "movies": MovieDataset("data/movies/moviequotes.memorable_quotes.txt")
+    # "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
+    # "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
+    # "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
+    # "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
+    # "bible": BibleDataset("data/bible/bible.txt"),
+    # "worm": WormDataset("data/worm/worm.txt"),
+    # "movies": MovieDataset("data/movies/moviequotes.memorable_quotes.txt"),
+    "vn": VisualNovelDataset("data/visualnovels/vn")
 }
 
 
 if __name__ == "__main__":
-    MovieDataset("data/movies/moviequotes.memorable_quotes.txt").process()
+    VisualNovelDataset("data/visualnovels/vn").process()
