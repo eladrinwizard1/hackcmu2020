@@ -3,17 +3,19 @@ import markovify
 from random import shuffle
 import language_tool_python
 
-
+import json
 from dataset import DATASETS
 
 
 def make_data():
     data = []
-    data += DATASETS["reviews"].sample(100)
-    data += DATASETS["shakespeare"].sample(100)
-    data += DATASETS["stackoverflow"].sample(1000)
-    data += DATASETS["toptweets"].sample(1000)
+    data += DATASETS["reviews"].sample(1000)
+    data += DATASETS["shakespeare"].sample(1000)
+    data += DATASETS["stackoverflow"].sample(0)
+    data += DATASETS["toptweets"].sample(0)
     data += DATASETS["bible"].sample(1000)
+    data += DATASETS["worm"].sample(1000)
+    data += DATASETS["movies"].sample(1000)
     shuffle(data)
     return data
 
@@ -21,10 +23,17 @@ def make_data():
 if __name__ == "__main__":
     lines = make_data()
 
-    # Build the model.
-    text_model = markovify.NewlineText("\n".join(lines), state_size=2)
+    # Build the model
+    text_model = markovify.NewlineText("\n".join(lines), state_size=3)
+    with open("model.json", "w+") as f:
+        json.dump(text_model.to_json(), f)
 
-    # Print three randomly-generated sentences of no more than 280 characters
+    seeds = [
+    ]
+
+    for s in seeds:
+        print(text_model.make_sentence_with_start(s))
+
     count = 0
     tool = language_tool_python.LanguageTool('en-US')
     while count < 10:

@@ -77,15 +77,22 @@ class WormDataset(Dataset):
             return f.readlines()
 
 
+class MovieDataset(Dataset):
+    def get_lines(self):
+        with open(self.path, "r", encoding="windows-1252") as f:
+            return [line for i, line in enumerate(f.readlines()) if i % 4 == 2]
+
+
 DATASETS = {
     "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
     "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
     "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
     "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
     "bible": BibleDataset("data/bible/bible.txt"),
-    "worm": WormDataset("data/worm/worm.txt")
+    "worm": WormDataset("data/worm/worm.txt"),
+    "movies": MovieDataset("data/movies/moviequotes.memorable_quotes.txt")
 }
 
 
 if __name__ == "__main__":
-    pass
+    MovieDataset("data/movies/moviequotes.memorable_quotes.txt").process()
