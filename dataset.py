@@ -19,7 +19,7 @@ class Dataset:
     def clean_line(line: str):
         line = line.strip()
         line = line.lower()
-        line = "".join(filter(lambda c: ord(c) < 256, line))
+        line = "".join(filter(lambda c: 0 < ord(c) < 128, line))
         line = re.sub(r"[0-9]*:[0-9]*", "", line)
         line = re.sub(r"[#@]", "", line)
         line = " ".join(filter(lambda x: "//" not in x, line.split()))
@@ -82,6 +82,7 @@ class MovieDataset(Dataset):
         with open(self.path, "r", encoding="windows-1252") as f:
             return [line for i, line in enumerate(f.readlines()) if i % 4 == 2]
 
+
 class VisualNovelDataset(Dataset):
     def _remove_brackets(self, text):
         count = 0
@@ -103,16 +104,16 @@ class VisualNovelDataset(Dataset):
         # re.sub("\\n", " ", desc)
         vnzipped = [(title, desc.replace("\\n", " ")) for title, desc in vnzipped if type(desc) is not float]
         vnzipped = [(title, self._remove_brackets(desc)) for title, desc in vnzipped]
-        return [title + " (thisisasep) " + desc + "\n" for title, desc in vnzipped]
+        return [desc + "\n" for title, desc in vnzipped]
 
 DATASETS = {
-    # "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
-    # "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
-    # "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
-    # "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
-    # "bible": BibleDataset("data/bible/bible.txt"),
-    # "worm": WormDataset("data/worm/worm.txt"),
-    # "movies": MovieDataset("data/movies/moviequotes.memorable_quotes.txt"),
+    "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),
+    "shakespeare": ShakespeareDataset("data/shakespeare/Shakespeare_data.csv"),
+    "stackoverflow": StackOverflowDataset("data/stackoverflow/Answers.csv"),
+    "toptweets": TopTweetsDataset("data/top20tweets/tweets.csv"),
+    "bible": BibleDataset("data/bible/bible.txt"),
+    "worm": WormDataset("data/worm/worm.txt"),
+    "movies": MovieDataset("data/movies/moviequotes.memorable_quotes.txt"),
     "vn": VisualNovelDataset("data/visualnovels/vn")
 }
 
