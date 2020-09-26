@@ -3,6 +3,12 @@ from bs4 import BeautifulSoup
 import re
 from random import sample
 
+try:
+    with open("banlist.txt", "r") as f:
+        BANNED_WORDS = [a.strip() for a in f.readlines()]
+except FileNotFoundError:
+    BANNED_WORDS = []
+
 
 class Dataset:
     min_line_length = 4
@@ -27,7 +33,8 @@ class Dataset:
 
     def process(self):
         with open(f"{self.dir}/raw_lines.txt", "w+", encoding="utf-8") as f:
-            f.writelines(filter(lambda x: x is not None, map(Dataset.clean_line, self.list)))
+            f.writelines(filter(lambda x: x is not None,
+                                map(Dataset.clean_line, self.list)))
 
     def sample(self, n):
         with open(f"{self.dir}/raw_lines.txt", encoding="utf-8") as f:
@@ -84,7 +91,8 @@ class MovieDataset(Dataset):
 
 
 class VisualNovelDataset(Dataset):
-    def _remove_brackets(self, text):
+    @staticmethod
+    def _remove_brackets(text):
         count = 0
         out = []
         for c in text:
@@ -96,15 +104,21 @@ class VisualNovelDataset(Dataset):
                 count -= 1
         return "".join(out)
 
+    @staticmethod
+    def _censor(text):
+        for word in BANNED_WORDS:
+            if word in text:
+                return False
+        return True
+
     def get_lines(self):
         vninfo = pd.read_csv(self.path, sep='\t', header=None)
-        vntitles = vninfo[1]
         vndescs = vninfo[6]
-        vnzipped = zip(vntitles, vndescs)
-        # re.sub("\\n", " ", desc)
-        vnzipped = [(title, desc.replace("\\n", " ")) for title, desc in vnzipped if type(desc) is not float]
-        vnzipped = [(title, self._remove_brackets(desc)) for title, desc in vnzipped]
-        return [desc + "\n" for title, desc in vnzipped]
+        vndescs = [desc.replace("\\n", " ")
+                   for desc in vndescs if type(desc) is not float]
+        vndescs = [self._remove_brackets(desc) for desc in vndescs]
+        vndescs = [desc for desc in vndescs if self._censor(desc)]
+        return [desc + "\n" for desc in vndescs]
 
 DATASETS = {
     "reviews": ReviewDataset("data/reviews/IMDB Dataset.csv"),

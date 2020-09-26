@@ -9,14 +9,14 @@ from dataset import DATASETS
 
 def make_data():
     data = []
-    data += DATASETS["reviews"].sample(1000)
-    data += DATASETS["shakespeare"].sample(1000)
+    data += DATASETS["reviews"].sample(0)
+    data += DATASETS["shakespeare"].sample(0)
     data += DATASETS["stackoverflow"].sample(0)
     data += DATASETS["toptweets"].sample(0)
-    data += DATASETS["bible"].sample(1000)
+    data += DATASETS["bible"].sample(0)
     data += DATASETS["worm"].sample(0)
-    data += DATASETS["movies"].sample(1000)
-    data += DATASETS["vn"].sample(22000)
+    data += DATASETS["movies"].sample(0)
+    data += DATASETS["vn"].sample(20000)
     shuffle(data)
     return data
 
